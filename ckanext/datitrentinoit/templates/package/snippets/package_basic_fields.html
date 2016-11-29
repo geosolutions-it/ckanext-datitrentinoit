@@ -30,6 +30,8 @@
 
 {% endblock %}
 
+{# --- OLD block now managed extending the ckanext-dcatapit schema ---
+
 {% block package_basic_fields_custom %}
 
   <!-- Holder -->
@@ -84,3 +86,5 @@
   {{ form.textarea('fields_description', label=_('Field Description'), id='field-fields_description', placeholder=_('Field Description'), value=fields_description or data.fields_description, error=errors.fields_description, classes=['control-full']) }}
 
 {% endblock %}
+
+------------------------------------------------------------------- #}
