@@ -1,8 +1,8 @@
 {% ckan_extends %}
 
-{% set locale = h.dti_get_language() %}
+{#% set locale = h.dti_get_language() %#}
 
-{% block package_basic_fields_title %}
+{#% block package_basic_fields_title %}
   <!-- TODO: Localize this in i18n -->
   {% trans %}
     <div>
@@ -28,7 +28,7 @@
 
   {{ super() }}
 
-{% endblock %}
+{% endblock %#}
 
 {# --- OLD block now managed extending the ckanext-dcatapit schema ---
 

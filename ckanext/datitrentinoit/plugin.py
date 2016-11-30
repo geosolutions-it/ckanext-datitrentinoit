@@ -14,20 +14,39 @@ import ckanext.dcatapit.interfaces as interfaces
 
 from ckan.common import _, ungettext
 
+try:
+    from ckan.lib.plugins import DefaultTranslation
+except ImportError:
+    class DefaultTranslation():
+        pass
+
 log = logging.getLogger(__name__)
 
 static_pages = ['faq', 'acknowledgements', 'legal_notes', 'privacy']
 
-class DatiTrentinoPlugin(plugins.SingletonPlugin):
+class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
 
-    """Controller used to load custom templates/resources/pages"""
-
+    # IConfigurer
     plugins.implements(plugins.IConfigurer)
+
+    # IConfigurable
     plugins.implements(plugins.IConfigurable)
+
+    # ITemplateHelpers
     plugins.implements(plugins.ITemplateHelpers)
+
+    # IRoutes
     plugins.implements(plugins.IRoutes)
+
+    # IPackageController
     plugins.implements(plugins.IPackageController, inherit=True)
+
+    # ICustomSchema
     plugins.implements(interfaces.ICustomSchema)
+
+    # ITranslation
+    if plugins_toolkit.check_ckan_version(min_version='2.5.0'):
+        plugins.implements(plugins.ITranslation, inherit=True)
 
     # Implementation of ICustomSchema
     # ------------------------------------------------------------
@@ -177,7 +196,6 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin):
 
 class DatiTrentinoController(base.BaseController):
     """Controller used to add custom pages"""
-
 
 for page_name in static_pages:
     def get_action(name):
