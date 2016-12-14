@@ -8,8 +8,6 @@ import routes.mapper as routes_mapper
 
 import ckanext.datitrentinoit.helpers as helpers
 
-import ckanext.datitrentinoit.model.custom as custom
-
 import ckanext.dcatapit.interfaces as interfaces
 
 from ckan.common import _, ungettext
@@ -88,7 +86,8 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
                 'label': _('Contact'),
                 'placeholder': _('contact'),
                 'is_required': False,
-                'localized': True
+                'localized': True,
+                'ignore_from_info': True
             }, {
                 'name': 'fields_description',
                 'validator': ['ignore_missing'],
@@ -96,7 +95,8 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
                 'label': _('Fields Description'),
                 'placeholder': _('description of the dataset fields'),
                 'is_required': False,
-                'localized': True
+                'localized': True,
+                'ignore_from_info': True
             }
         ]
 
@@ -138,9 +138,7 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
         return {
             'dti_ga_site_id': self._get_ga_site_id,
             'dti_ga_site_domain': self._get_ga_site_domain,
-            'dti_recent_updates': helpers.recent_updates,
-            'dti_get_localized_field_value': helpers.getLocalizedFieldValue,
-            'dti_get_language': helpers.getLanguage
+            'dti_recent_updates': helpers.recent_updates
         }
 
     def _get_ga_site_id(self):
@@ -149,50 +147,6 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
     def _get_ga_site_domain(self):
         return self.ga_conf['domain']
 
-    def after_create(self, context, pkg_dict):
-        # During the harvest the get_lang() is not defined
-        lang = helpers.getLanguage()
-
-        if lang:    
-            for extra in pkg_dict.get('extras'):
-                for field in self.get_custom_schema():
-                    if extra.get('key') == field['name'] and field['localized'] == True:
-                        log.info(':::::::::::::::Localizing custom field: %r', field['name'])
-                        
-                        # Create the localized field record
-                        self.createLocField(extra, lang, pkg_dict.get('id'))
-
-    def after_update(self, context, pkg_dict):
-        # During the harvest the get_lang() is not defined
-        lang = helpers.getLanguage()
-
-        if lang:             
-            for extra in pkg_dict.get('extras'):
-                for field in self.get_custom_schema():
-                    if extra.get('key') == field['name'] and field['localized'] == True:
-                        log.info(':::::::::::::::Localizing custom field: %r', field['name'])
-                        f = custom.get_field(extra.get('key'), pkg_dict.get('id'), lang)
-                        if f:
-                            if extra.get('value') == '':
-                                f.purge()
-                            elif f.text != extra.get('value'):
-                                # Update the localized field value for the current language
-                                f.text = extra.get('value')
-                                f.save()
-
-                                log.info('Custom field updated successfully')
-
-                        elif extra.get('value') != '':
-                            # Create the localized field record
-                            self.createLocField(extra, lang, pkg_dict.get('id'))
-
-    def createLocField(self, extra, lang, package_id): 
-        log.debug('Creating createLocField for package ID: %r', str(package_id))
-
-        new_loc_field = custom.CustomFieldMultilang(package_id, extra.get('key'), lang, extra.get('value'))
-        custom.CustomFieldMultilang.save(new_loc_field)
-
-        log.info('Custom field created successfully')
 
 class DatiTrentinoController(base.BaseController):
     """Controller used to add custom pages"""

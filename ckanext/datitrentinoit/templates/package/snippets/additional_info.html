@@ -1,319 +1,53 @@
 
-{# TODO: REVIEW THIS TEMPLATE AFTER THE RECENT INTEGRATION WITH DCATAPIT #}
-
-{% set locale = h.dti_get_language() %}
-
 <section class="additional-info">
   <h3>{{ _('Field Description') }}</h3>
-  {% set fields_description = h.dti_get_localized_field_value('fields_description', pkg_dict) %}
-  <div style="word-wrap: break-word;">{{ h.render_markdown(fields_description or pkg_dict.fields_description or ('N/V' if locale =='de' else 'N/A')) }}</div>
-
-  <h3>{{ _('Dataset Metadata') }}</h3>
-
-  <table class="table table-striped table-bordered table-condensed">
-    <!--thead>
-      <tr>
-        <th scope="col">{{ _('Field') }}</th>
-        <th scope="col">{{ _('Value') }}</th>
-      </tr>
-    </thead-->
-    <tbody>
-        {% if pkg_dict.holder %}
-          {% set holder = h.dti_get_localized_field_value('holder', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Holder") }}</th>
-            <td class="dataset-details">{{ holder or pkg_dict.holder }}</td>
-          </tr>
-        {% endif %}
-      
-        {% if pkg_dict.geographical_coverage %}
-          {% set geographical_coverage = h.dti_get_localized_field_value('geographical_coverage', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Geographical Coverage") }}</th>
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ geographical_coverage or pkg_dict.geographical_coverage or "Zuständigkeitsgebiet der Organisationseinheit" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ geographical_coverage or pkg_dict.geographical_coverage or "Area di competenza dell'unità organizzativa preposta" }}</td>
-            {% endif %}
-          </tr>
-        {% else %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Geographical Coverage") }}</th>
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ "Zuständigkeitsgebiet der Organisationseinheit" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ "Area di competenza dell'unità organizzativa preposta" }}</td>
-            {% endif %}
-          </tr>
-        {% endif %}
-
-        {% if pkg_dict.temporal_coverage_start %}
-          {% set temporal_coverage_start = h.dti_get_localized_field_value('temporal_coverage_start', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Temporal Coverage (Start Date)") }}</th>
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ temporal_coverage_start or pkg_dict.temporal_coverage_start or "N/V" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ temporal_coverage_start or pkg_dict.temporal_coverage_start or "N/A" }}</td>
-            {% endif %}
-          </tr>
-        {% else %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Temporal Coverage (Start Date)") }}</th>
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ "N/V" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ "N/A" }}</td>
-            {% endif %}
-          </tr>
-        {% endif %}
-
-        {% if pkg_dict.temporal_coverage_end %}
-          {% set temporal_coverage_end = h.dti_get_localized_field_value('temporal_coverage_end', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Temporal Coverage (End Date)") }}</th> 
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ temporal_coverage_end or pkg_dict.temporal_coverage_end or "N/V" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ temporal_coverage_end or pkg_dict.temporal_coverage_end or "N/A" }}</td>
-            {% endif %}
-          </tr>
-        {% else %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Temporal Coverage (End Date)") }}</th> 
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ "N/V" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ "N/A" }}</td>
-            {% endif %}
-          </tr>
-        {% endif %}
-        
-        {% if pkg_dict.update_frequency %}
-          {% set update_frequency = h.dti_get_localized_field_value('update_frequency', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Update Frequency") }}</th>
-            <td class="dataset-details">{{ update_frequency or _(pkg_dict.update_frequency) }}</td>
-          </tr>
-        {% endif %}
-
-        {% if pkg_dict.creation_date %}
-          {% set creation_date = h.dti_get_localized_field_value('creation_date', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Creation Date") }}</th>
-            <td class="dataset-details">{{ creation_date or pkg_dict.creation_date }}</td>
-          </tr>
-        {% endif %}
-
-        {% if pkg_dict.publication_date %}
-          {% set publication_date = h.dti_get_localized_field_value('publication_date', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Publication Date") }}</th>
-            <td class="dataset-details">{{ publication_date or pkg_dict.publication_date }}</td>
-          </tr>
-        {% endif %}
-        
-        {% if pkg_dict.revision_date %}
-          {% set revision_date = h.dti_get_localized_field_value('revision_date', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Revision Date") }}</th>
-            <td class="dataset-details">{{ revision_date or pkg_dict.revision_date }}</td>
-          </tr>
-        {% endif %}
-
-        {% if pkg_dict.encoding %}
-          {% set encoding = h.dti_get_localized_field_value('encoding', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Encoding") }}</th>
-            <td class="dataset-details">{{ encoding or pkg_dict.encoding }}</td>
-          </tr>
-        {% endif %}
-
-        {% if pkg_dict.site_url %}
-          {% set site_url = h.dti_get_localized_field_value('site_url', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Site URL") }}</th>
-            <td class="dataset-details">{{ h.link_to(site_url or pkg_dict.site_url, site_url or pkg_dict.site_url, rel='foaf:homepage', target='_blank') }}</td>
-          </tr>
-        {% else %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Site URL") }}</th>
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ "N/V" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ "N/A" }}</td>
-            {% endif %}
-          </tr>
-        {% endif %}
-
-    </tbody>
-  </table>
+  <div style="word-wrap: break-word;">{{ h.render_markdown(pkg_dict.fields_description or _('N/D')) }}</div>
 
   <h3>{{ _('Additional Info') }}</h3>
   <table class="table table-striped table-bordered table-condensed">
-    <!--thead>
-      <tr>
-        <th scope="col">{{ _('Field') }}</th>
-        <th scope="col">{{ _('Value') }}</th>
-      </tr>
-    </thead-->
     <tbody>
       {% block package_additional_info %}
-        {#% if pkg_dict.url %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _('Source') }}</th>
-            {% if h.is_url(pkg_dict.url) %}
-              <td class="dataset-details" property="foaf:homepage">{{ h.link_to(pkg_dict.url, pkg_dict.url, rel='foaf:homepage', target='_blank') }}</td>
-            {% else %}
-              <td class="dataset-details" property="foaf:homepage">{{ pkg_dict.url }}</td>
-            {% endif %}
-          </tr>
-        {% endif %#}
 
         {% if pkg_dict.author_email %}
-          {% set author = h.dti_get_localized_field_value('author', pkg_dict) %}
           <tr>
             <th scope="row" class="dataset-label">{{ _("Author") }}</th>
-            <td class="dataset-details" property="dc:creator">{{ h.mail_to(email_address=pkg_dict.author_email, name=author or pkg_dict.author) }}</td>
+            <td class="dataset-details" property="dc:creator">{{ h.mail_to(email_address=pkg_dict.author_email, name=pkg_dict.author) }}</td>
           </tr>
         {% elif pkg_dict.author %}
-          {% set author = h.dti_get_localized_field_value('author', pkg_dict) %}
           <tr>
             <th scope="row" class="dataset-label">{{ _("Author") }}</th>
-            <td class="dataset-details" property="dc:creator">{{ author or pkg_dict.author }}</td>
+            <td class="dataset-details" property="dc:creator">{{ pkg_dict.author }}</td>
           </tr>
         {% else %}
           <tr>
             <th scope="row" class="dataset-label">{{ _("Author") }}</th>
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ "N/V" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ "N/A" }}</td>
-            {% endif %}
+            <td class="dataset-details">{{ _('N/D') }}</td>
           </tr>
         {% endif %}
 
         {% if pkg_dict.url %}
-          {% set url = h.dti_get_localized_field_value('url', pkg_dict) %}
           <tr>
             <th scope="row" class="dataset-label">{{ _("Origin") }}</th>
-            <td class="dataset-details" property="dc:creator">{{ h.link_to(url or pkg_dict.url , url or pkg_dict.url, rel='foaf:homepage', target='_blank') }}</td>
+            <td class="dataset-details" property="dc:creator">{{ h.link_to(pkg_dict.url , pkg_dict.url, rel='foaf:homepage', target='_blank') }}</td>
           </tr>
         {% else %}
           <tr>
             <th scope="row" class="dataset-label">{{ _("Origin") }}</th>
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ "N/V" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ "N/A" }}</td>
-            {% endif %}
+            <td class="dataset-details">{{ _('N/D') }}</td>
           </tr>
         {% endif %}
-
-        {#% if pkg_dict.maintainer_email %}
-          {% set maintainer = h.dti_get_localized_field_value('maintainer', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _('Maintainer') }}</th>
-            <td class="dataset-details" property="dc:contributor">{{ h.mail_to(email_address=pkg_dict.maintainer_email, name=maintainer or pkg_dict.maintainer) }}</td>
-          </tr>
-        {% elif pkg_dict.maintainer %}
-          {% set maintainer = h.dti_get_localized_field_value('maintainer', pkg_dict) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _('Maintainer') }}</th>
-            <td class="dataset-details" property="dc:contributor">{{ maintainer or pkg_dict.maintainer }}</td>
-          </tr>
-        {% endif %#}
-
-        {#% if pkg_dict.version %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Version") }}</th>
-            <td class="dataset-details">{{ pkg_dict.version }}</td>
-          </tr>
-        {% endif %#}
-
-        {#% if h.check_access('package_update',{'id':pkg_dict.id}) %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("State") }}</th>
-            <td class="dataset-details">{{ _(pkg_dict.state) }}</td>
-          </tr>
-        {% endif %}
-        {% if pkg_dict.metadata_modified %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Last Updated") }}</th>
-            {% set hour_str = " " + _('hour') + " " %}
-            <td class="dataset-details">{{ h.render_datetime(pkg_dict.metadata_modified, with_hours=True).replace(", ", "," + hour_str) }}</td>
-          </tr>
-        {% endif %}
-        {% if pkg_dict.metadata_created %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _("Created") }}</th>
-            {% set hour_str = " " + _('hour') + " " %}
-            <td class="dataset-details">{{ h.render_datetime(pkg_dict.metadata_created, with_hours=True).replace(", ", "," + hour_str) }}</td>
-          </tr>
-        {% endif %#}
 
         {% if pkg_dict.contact %}
-          {% set contact = h.dti_get_localized_field_value('contact', pkg_dict) %}
           <tr>
-            <th scope="row" class="dataset-label">{{ _("contact") }}</th>
+            <th scope="row" class="dataset-label">{{ _('Contact') }}</th>
             <td class="dataset-details">{{ h.mail_to(email_address=contact or pkg_dict.contact, name=contact or pkg_dict.contact) }}</td>
           </tr>
         {% else %}
           <tr>
-            <th scope="row" class="dataset-label">{{ _("contact") }}</th>
-            {% if locale == 'de' %}
-              <td class="dataset-details">{{ "N/V" }}</td>
-            {% else %}
-              <td class="dataset-details">{{ "N/A" }}</td>
-            {% endif %}
+            <th scope="row" class="dataset-label">{{ _('Contact') }}</th>
+            <td class="dataset-details">{{ _('N/D') }}</td>
           </tr>
         {% endif %}
-
-      {% block extras scoped %}
-        {% for extra in h.sorted_extras(pkg_dict.extras) %}
-          {% set key, value = extra %}
-          <!-- Spatial field should not be shown -->
-          <!-- commented as required -->
-          {# % if key != 'bbox-east-long' and 
-                key != 'bbox-north-lat' and 
-                key != 'bbox-south-lat' and 
-                key != 'bbox-west-long' and 
-                key != 'spatial' and 
-                key != 'spatial-reference-system' and 
-                key != 'spatial-data-service-type' and 
-                key != 'spatial_harvester' and
-                key != 'geocat_layer_url' and
-                key != 'dataset-reference-date' and
-                key != 'responsible-party' %}
-            <tr rel="dc:relation" resource="_:extra{{ i }}">
-              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
-              <td class="dataset-details" property="rdf:value">{{ value }}</td>
-            </tr>
-          {% endif %}
-
-          {% if key == 'dataset-reference-date' %}
-            {% set date_references = h.parseRefDate(value) %}
-            {% for datetype in date_references %}
-              <tr rel="dc:relation" resource="_:extra{{ i }}">
-                <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }} ({{ datetype.type }})</th>
-                <td class="dataset-details" property="rdf:value">{{ datetype.value }}</td>
-              </tr>
-            {% endfor %}
-          {% endif %}
-
-          {% if key == 'responsible-party' %}
-            {% set responsible_party = h.parseRefDate(value) %}
-            {% for party in responsible_party %}
-              <tr rel="dc:relation" resource="_:extra{{ i }}">
-                <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
-                <td class="dataset-details" property="rdf:value">{{ party.name }}</td>
-              </tr>
-            {% endfor %}
-          {% endif % #}
-          <!-- end comment -->
-
-        {% endfor %}
-      {% endblock %}
 
       {% endblock %}
     </tbody>

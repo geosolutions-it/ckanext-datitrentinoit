@@ -1,10 +1,8 @@
 {% ckan_extends %}
 
-{#% set locale = h.dti_get_language() %#}
-
-{#% block package_basic_fields_title %}
+{% block package_basic_fields_title %}
   <!-- TODO: Localize this in i18n -->
-  {% trans %}
+  {#% trans %}
     <div>
       <p>Se non specificato nella descrizione del dataset o nella "Documentazione tecnica", è necessario descrivere in questo metadato i campi (attributi) delle informazioni contenute nel dataset. Nel caso di dato tabellare, gli attributi corrispondono alle colonne della tabella. Le informazioni da specificare includono:</p>
 
@@ -23,68 +21,9 @@
         <dd>Rappresenta il dominio del attributo e ne contiene, ove necessario, la decodifica (es. "Il codice assume valori che vanno da 1 a 223, numero dei comuni totali della Provincia Autonoma di Trento") </dd>
       </dl>
     </div>
-  {%endtrans %}
+  {%endtrans %#}
   <!-- TODO END -->
 
   {{ super() }}
 
-{% endblock %#}
-
-{# --- OLD block now managed extending the ckanext-dcatapit schema ---
-
-{% block package_basic_fields_custom %}
-
-  <!-- Holder -->
-  {% set holder = h.dti_get_localized_field_value('holder', data) %}
-  {{ form.input('holder', label=_('Holder'), id='field-holder', placeholder=_('Holder'), value=holder or data.holder, error=errors.holder, classes=['control-medium']) }}
-
-  <!-- Geographical Coverage -->
-  {% set geographical_coverage = h.dti_get_localized_field_value('geographical_coverage', data) %}
-  {% set geographical_coverage_default = "Zuständigkeitsgebiet der Organisationseinheit" if locale =='de' else "Area di competenza dell'unità organizzativa preposta" %}
-  {{ form.input('geographical_coverage', label=_('Geographical Coverage'), id='field-geographical_coverage', placeholder=_('Geographical Coverage'), value=geographical_coverage or data.geographical_coverage or geographical_coverage_default, error=errors.geographical_coverage, classes=['control-medium']) }}
-
-  <!-- Temporal Coverage (Start Date) -->
-  {% set temporal_coverage_start = h.dti_get_localized_field_value('temporal_coverage_start', data) %}
-  {% set temporal_coverage_start_default = 'N/V' if locale =='de' else 'N/A' %}
-  {{ form.input('temporal_coverage_start', label=_('Temporal Coverage (Start Date)'), id='field-temporal_coverage_start', placeholder=_('Temporal Coverage (Start Date)'), value=temporal_coverage_start or data.temporal_coverage_start or temporal_coverage_start_default, error=errors.temporal_coverage_start, classes=['control-medium']) }}
-
-  <!-- Copertura Temporale (Data di fine) -->
-  {% set temporal_coverage_end = h.dti_get_localized_field_value('temporal_coverage_end', data) %}
-  {% set temporal_coverage_end_default = 'N/V' if locale =='de' else 'N/A' %}
-  {{ form.input('temporal_coverage_end', label=_('Temporal Coverage (End Date)'), id='field-temporal_coverage_end', placeholder=_('Temporal Coverage (End Date)'), value=temporal_coverage_end or data.temporal_coverage_end or temporal_coverage_end_default, error=errors.temporal_coverage_end, classes=['control-medium']) }}
-  
-  <!-- Update Frequency -->
-  {% set update_frequency = h.dti_get_localized_field_value('update_frequency', data) %}
-  {{ form.select('update_frequency', label=_('Update Frequency'), options=[{'name':"asNeeded", 'value': _('asNeeded')},{'name':"quarterly", 'value': _('quarterly')},{'name':"fortnightly", 'value': _('fortnightly')}, {'name':"annually", 'value': _('annually')},{'name': "monthly", 'value': _('monthly')},{'name': "weekly", 'value': _('weekly')},{'name': "daily", 'value': _('daily')},{'name': "continual", 'value': _('continual')},{'name': "notPlanned", 'value': _('notPlanned')},{'name': "irregular", 'value': _('irregular')},{'name': "unknown", 'value': _('unknown')}], selected=update_frequency or _(data.update_frequency), error=errors.update_frequency) }}
-
-  <!-- Creation Date -->
-  {% set creation_date = h.dti_get_localized_field_value('creation_date', data) %}
-  {{ form.input('creation_date', label=_('Creation Date'), id='field-creation_date', placeholder=_('Creation Date'), value=creation_date or data.creation_date, error=errors.creation_date, classes=['control-medium']) }}
-
-  <!-- Publication Date -->
-  {% set publication_date = h.dti_get_localized_field_value('publication_date', data) %}
-  {{ form.input('publication_date', label=_('Publication Date'), id='field-publication_date', placeholder=_('Publication Date'), value=publication_date or data.publication_date, error=errors.publication_date, classes=['control-medium']) }}
-
-  <!-- Revision Date -->
-  {% set revision_date = h.dti_get_localized_field_value('revision_date', data) %}
-  {{ form.input('revision_date', label=_('Revision Date'), id='field-revision_date', placeholder=_('Revision Date'), value=revision_date or data.revision_date, error=errors.revision_date, classes=['control-medium']) }}
-
-  <!-- Encoding -->
-  {% set encoding = h.dti_get_localized_field_value('encoding', data) %}
-  {{ form.input('encoding', label=_('Encoding'), id='field-encoding', placeholder=_('Encoding'), value=encoding or data.encoding, error=errors.encoding, classes=['control-medium']) }}
-
-  <!-- Site URL -->
-  {% set site_url = h.dti_get_localized_field_value('site_url', data) %}
-  {{ form.input('site_url', label=_('Site URL'), id='field-site_url', placeholder=_('Site URL'), value=site_url or data.site_url, error=errors.site_url, classes=['control-medium']) }}
-
-  <!-- contact -->
-  {% set contact = h.dti_get_localized_field_value('contact', data) %}
-  {{ form.input('contact', label=_('contact'), id='field-contact', placeholder=_('contact'), value=contact or data.contact, error=errors.contact, classes=['control-medium']) }}
-
-  <!-- Field Description -->
-  {% set fields_description = h.dti_get_localized_field_value('fields_description', data) %}
-  {{ form.textarea('fields_description', label=_('Field Description'), id='field-fields_description', placeholder=_('Field Description'), value=fields_description or data.fields_description, error=errors.fields_description, classes=['control-full']) }}
-
 {% endblock %}
-
-------------------------------------------------------------------- #}
