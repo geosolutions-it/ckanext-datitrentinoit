@@ -20,8 +20,10 @@ setup(
     install_requires=[],
     entry_points='''
         [ckan.plugins]
-        # Add plugins here, e.g.
         datitrentinoit = ckanext.datitrentinoit.plugin:DatiTrentinoPlugin
+        statwebpro_harvester=ckanext.datitrentinoit.harvesters.statwebpro:StatWebProHarvester
+        statwebsubpro_harvester=ckanext.datitrentinoit.harvesters.statwebsubpro:StatWebSubProHarvester
+        csw_tn_harvester=ckanext.datitrentinoit.harvesters.csw_tn:CSWTNHarvester
 
         [babel.extractors]
         ckan = ckan.lib.extract:extract_ckan

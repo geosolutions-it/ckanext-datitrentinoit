@@ -10,6 +10,8 @@ import ckan.lib.helpers as h
 
 import ckan.logic as logic
 
+import ckanext.multilang.helpers as multilang_helpers
+
 from pylons.i18n.translation import get_lang
 from ckanext.multilang.model import PackageMultilang
 
@@ -37,7 +39,7 @@ def recent_updates(n):
     for item in search_results.get('results'):
         log.info(':::::::::::: Retrieving the corresponding localized title and abstract :::::::::::::::')
 
-        lang = getLanguage()
+        lang = multilang_helpers.getLanguage()
         
         q_results = model.Session.query(PackageMultilang).filter(PackageMultilang.package_id == item.get('id'), PackageMultilang.lang == lang).all() 
 

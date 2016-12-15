@@ -77,7 +77,7 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
                 'label': _('Site URL'),
                 'placeholder': _('site url'),
                 'is_required': False,
-                'localized': True
+                'localized': False
             }, {
                 'name': 'contact',
                 'validator': ['ignore_missing'],
@@ -86,7 +86,7 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
                 'label': _('Contact'),
                 'placeholder': _('contact'),
                 'is_required': False,
-                'localized': True,
+                'localized': False,
                 'ignore_from_info': True
             }, {
                 'name': 'fields_description',

@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ckanext-datitrentinoit 0.1.1\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2016-08-05 11:00+0200\n"
+"POT-Creation-Date: 2016-12-15 11:05+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -39,12 +39,14 @@ msgstr ""
 #: ckanext/datitrentinoit/templates/footer.html:26
 #: ckanext/datitrentinoit/templates/pages/legal_notes.html:5
 #: ckanext/datitrentinoit/templates/pages/legal_notes.html:9
+#: ckanext/datitrentinoit/templates/pages/legal_notes.html:19
 msgid "Legal notes"
 msgstr ""
 
 #: ckanext/datitrentinoit/templates/footer.html:30
 #: ckanext/datitrentinoit/templates/pages/privacy.html:5
 #: ckanext/datitrentinoit/templates/pages/privacy.html:9
+#: ckanext/datitrentinoit/templates/pages/privacy.html:19
 msgid "Privacy"
 msgstr ""
 
@@ -62,31 +64,35 @@ msgid ""
 "href=\"http://ckan.org\">CKAN</a>"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/header.html:34
+#: ckanext/datitrentinoit/templates/header.html:19
 msgid "Datasets"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/header.html:35
+#: ckanext/datitrentinoit/templates/header.html:20
 msgid "Organizations"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/header.html:36
+#: ckanext/datitrentinoit/templates/header.html:21
 #: ckanext/datitrentinoit/templates/group/index.html:7
 #: ckanext/datitrentinoit/templates/group/index.html:19
 msgid "Categories"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/header.html:37
+#: ckanext/datitrentinoit/templates/header.html:22
 #: ckanext/datitrentinoit/templates/home/about.html:5
 #: ckanext/datitrentinoit/templates/home/about.html:8
 #: ckanext/datitrentinoit/templates/home/about.html:15
 msgid "About"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/header.html:38
+#: ckanext/datitrentinoit/templates/header.html:23
+msgid "Showcases"
+msgstr ""
+
+#: ckanext/datitrentinoit/templates/header.html:24
 #: ckanext/datitrentinoit/templates/pages/faq.html:5
 #: ckanext/datitrentinoit/templates/pages/faq.html:9
-#: ckanext/datitrentinoit/templates/pages/faq.html:19
+#: ckanext/datitrentinoit/templates/pages/faq.html:17
 msgid "FAQ"
 msgstr ""
 
@@ -257,176 +263,35 @@ msgid ""
 "institutional source.<br>Usually organizations are the data holder entities."
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:5
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:84
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:3
 msgid "Field Description"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:9
-msgid "Dataset Metadata"
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:4
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:24
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:36
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:48
+msgid "N/D"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:14
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:154
-msgid "Field"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:15
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:155
-msgid "Value"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:22
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:37
-msgid "Holder"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:30
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:39
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:42
-msgid "Geographical Coverage"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:51
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:60
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:47
-msgid "Temporal Coverage (Start Date)"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:72
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:81
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:52
-msgid "Temporal Coverage (End Date)"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:93
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "Update Frequency"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:101
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:60
-msgid "Creation Date"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:109
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:64
-msgid "Publication Date"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:117
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:68
-msgid "Revision Date"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:125
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:72
-msgid "Encoding"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:133
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:138
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:76
-msgid "Site URL"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:150
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:6
 msgid "Additional Info"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:174
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:180
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:185
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:13
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:18
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:23
 msgid "Author"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:197
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:202
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:30
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:35
 msgid "Origin"
 msgstr ""
 
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:256
-#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:261
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:80
-msgid "contact"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:7
-msgid ""
-"\n"
-"    <div>\n"
-"      <p>Se non specificato nella descrizione del dataset o nella "
-"\"Documentazione tecnica\", è necessario descrivere in questo metadato i "
-"campi (attributi) delle informazioni contenute nel dataset. Nel caso di dato "
-"tabellare, gli attributi corrispondono alle colonne della tabella. Le "
-"informazioni da specificare includono:</p>\n"
-"\n"
-"      <dl>\n"
-"        <dt>Nome completo</dt>\n"
-"        <dd>E' il nome che viene mostrato all'utente quando consulta il "
-"dataset (es. \"Descrizione\")</dd>\n"
-"        <dt>Nome breve</dt>\n"
-"        <dd>E' il nome dell’attributo utilizzato nel dataset, normalmente "
-"un'abbreviazione del nome completo (es.\"Desc\")</dd>\n"
-"        <dt>Descrizione</dt>\n"
-"        <dd>Illustra il significato del campo, eventuali relazioni con altri "
-"dataset, come il campo è stato generato, etc. (es. \"Codice ISTAT del comune "
-"amministrativo\")</dd>\n"
-"        <dt>Tipologia dell'attributo</dt>\n"
-"        <dd>testo, numero, data, etc.</dd>\n"
-"        <dt>Formato dell'attributo</dt>\n"
-"        <dd>Ad esempio unità di misura o struttura della data</dd>\n"
-"        <dt>Valori ammessi</dt>\n"
-"        <dd>Rappresenta il dominio del attributo e ne contiene, ove "
-"necessario, la decodifica (es. \"Il codice assume valori che vanno da 1 a "
-"223, numero dei comuni totali della Provincia Autonoma di Trento\") </dd>\n"
-"      </dl>\n"
-"    </div>\n"
-"  "
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "asNeeded"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "quarterly"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "fortnightly"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "annually"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "monthly"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "weekly"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "daily"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "continual"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "notPlanned"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "irregular"
-msgstr ""
-
-#: ckanext/datitrentinoit/templates/package/snippets/package_basic_fields.html:56
-msgid "unknown"
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:42
+#: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:47
+msgid "Contact"
 msgstr ""
 
 #: ckanext/datitrentinoit/templates/related/dashboard.html:6
