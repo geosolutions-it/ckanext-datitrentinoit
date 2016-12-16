@@ -283,22 +283,22 @@ msgstr "Feld Beschreibung"
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:36
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:48
 msgid "N/D"
-msgstr ""
+msgstr "N/V"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:6
 msgid "Additional Info"
-msgstr ""
+msgstr "Zusätzliche Information"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:13
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:18
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:23
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:30
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:35
 msgid "Origin"
-msgstr ""
+msgstr "Herkunft"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:42
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:47

@@ -196,11 +196,11 @@ msgstr "Visualizza {name}"
 
 #: ckanext/datitrentinoit/templates/group/snippets/group_item.html:39
 msgid "Remove"
-msgstr ""
+msgstr "Rimuovi"
 
 #: ckanext/datitrentinoit/templates/group/snippets/group_item.html:39
 msgid "Remove dataset from this group"
-msgstr ""
+msgstr "Rimuovi il dataset da questo gruppo"
 
 #: ckanext/datitrentinoit/templates/home/index.html:30
 msgid "What's the weather like, today, in Trentino"
@@ -292,22 +292,22 @@ msgstr "Descrizione Campi"
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:36
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:48
 msgid "N/D"
-msgstr ""
+msgstr "N/A"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:6
 msgid "Additional Info"
-msgstr ""
+msgstr " Informazioni Addizionali"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:13
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:18
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:23
 msgid "Author"
-msgstr ""
+msgstr "Autore"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:30
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:35
 msgid "Origin"
-msgstr ""
+msgstr "Origine"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:42
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:47
