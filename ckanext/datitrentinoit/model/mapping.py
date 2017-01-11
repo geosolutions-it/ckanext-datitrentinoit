@@ -129,6 +129,7 @@ def create_base_dict(guid, metadata, config):
 
     extras = {
         'holder_name': 'Provincia Autonoma di Trento',
+        'geographical_name': 'ITA_TRT',
         'geographical_geonames_url': 'http://www.geonames.org/3165243',
         'temporal_start': dateformat(created),
         'frequency': metadata.get_frequenza(),
