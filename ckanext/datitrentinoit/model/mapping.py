@@ -128,12 +128,12 @@ def create_base_dict(guid, metadata, config):
     }
 
     extras = {
-        'holder': 'Provincia Autonoma di Trento',
-        'geographical_coverage': 'Provincia di Trento',
-        'temporal_coverage_start': dateformat(created),
-        'update_frequency': metadata.get_frequenza(),
-        'publication_date': now,
-        'revision_date': dateformat(updated),
+        'holder_name': 'Provincia Autonoma di Trento',
+        'geographical_geonames_url': 'http://www.geonames.org/3165243',
+        'temporal_start': dateformat(created),
+        'frequency': metadata.get_frequenza(),
+        'issued': now,
+        'modified': dateformat(updated),
         'encoding': 'UTF-8',
         'Algoritmo':         metadata.get_algoritmo(),
         'Anno di inizio':    metadata.get_anno_inizio(),
