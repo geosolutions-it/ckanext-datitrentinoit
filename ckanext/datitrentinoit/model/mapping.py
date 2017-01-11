@@ -95,7 +95,7 @@ def create_base_dict(guid, metadata, config):
     """
 
     def dateformat(d):
-        return d.strftime(r"%d/%m/%Y %H:%M")
+        return d.strftime(r"%Y-%m-%d")
         return d.isoformat()
 
     start_date = metadata.get_anno_inizio() or '1970'
