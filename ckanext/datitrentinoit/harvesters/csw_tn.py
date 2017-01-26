@@ -12,6 +12,7 @@ from lxml import etree
 
 from ckan import model
 from ckan.model import Session
+from ckan.model import Tag
 
 from ckanext.multilang.model import PackageMultilang, TagMultilang
 
@@ -110,6 +111,7 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
     _default_values = {
         'dataset_theme': 'OP_DATPRO',
+        'dataset_place': 'ITA_TRT',
         'dataset_language': '{ITA,DEU,ENG}',
         'agent_code': 'p_TN',
         'frequency': 'UNKNOWN',
@@ -121,7 +123,8 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
             'regex': '-(.+)',
             'group': 1 # optional, dependes by the regular expression
         },
-        'dcatapit_skos_theme_id': 'theme.data-theme-skos'
+        'dcatapit_skos_theme_id': 'theme.data-theme-skos',
+        'dcatapit_skos_places_id': 'theme.data-places-skos'
     }
     
     def info(self):
@@ -196,18 +199,7 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         # ##################
         dataset_themes = []
         if iso_values["keywords"]:
-            log.debug('::::: Collecting thesaurus data for dcatapit skos theme from the metadata keywords :::::')
-
-            dcatapit_skos_theme_id = default_values.get('dcatapit_skos_theme_id')
-            
-            for key in iso_values["keywords"]:
-            	if dcatapit_skos_theme_id and dcatapit_skos_theme_id in key['thesaurus-identifier']:            		
-            		for k in key['keyword']:
-            			query = Session.query(TagMultilang).filter(TagMultilang.text==k, TagMultilang.tag_name.in_(('AGRI','EDUC','ENVI','ENER','TRAN','TECH','ECON','SOCI','HEAL','GOVE','REGI','JUST','INTR','OP_DATPRO')))
-            			query = query.autoflush(True)
-            			theme = query.first()
-
-            			dataset_themes.append(theme.tag_name)
+            dataset_themes = self.get_controlled_vocabulary_values('eu_themes', default_values.get('dcatapit_skos_theme_id'), iso_values["keywords"])
 
         if dataset_themes and len(dataset_themes) > 0:
         	dataset_themes = list(set(dataset_themes))
@@ -321,8 +313,20 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         publication_date = iso_values["date-released"]
         package_dict['extras'].append({'key': 'issued', 'value': publication_date})
 
-        # geographical_name nothing to do 
+        # geographical_name 
         # #################
+        dataset_places = []
+        if iso_values["keywords"]:
+            dataset_places = self.get_controlled_vocabulary_values('places', default_values.get('dcatapit_skos_places_id'), iso_values["keywords"])
+
+        if dataset_places and len(dataset_places) > 0:
+            dataset_places = list(set(dataset_places))
+            dataset_places = '{' + ','.join(str(l) for l in dataset_places) + '}'
+        else:
+            dataset_places =  default_values.get('dataset_place')
+
+        log.info("Medatata harvested dataset places: %r", dataset_places)
+        package_dict['extras'].append({'key': 'geographical_name', 'value': dataset_places})
 
         # geographical_geonames_url nothing to do 
         # #########################
@@ -464,6 +468,44 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
         # End of processing, return the modified package
         return package_dict
+
+    def get_controlled_vocabulary_values(self, vocabulary_id, thesaurus_id, keywords):
+        log.debug('::::: Collecting thesaurus data for dcatapit skos {0} from the metadata keywords :::::'.format(vocabulary_id))
+
+        values = []
+
+        #
+        # Get all the places tag names by the vocabulary id
+        #
+        tag_names_list = self.get_vocabulary_tag_names(vocabulary_id)
+
+        if len(tag_names_list) > 0:
+            for key in keywords:
+                if thesaurus_id and thesaurus_id in key['thesaurus-identifier']:
+                    for k in key['keyword']:
+                        query = Session.query(TagMultilang).filter(TagMultilang.text==k, TagMultilang.tag_name.in_(tag_names_list))
+                        query = query.autoflush(True)
+                        theme = query.first()
+
+                        values.append(theme.tag_name)
+        return values
+
+    def get_vocabulary_tag_names(self, vocab_id_or_name):
+        tag_names_list = []
+
+        try:
+            log.debug("Finding tag names by vocabulary id or name for vocabulary {0}".format(vocab_id_or_name))
+            tags = Tag.all(vocab_id_or_name)
+
+            if tags:
+                for tag in tags:
+                    tag_names_list.append(tag.name)
+                    log.debug("Tag name for tag {0} collected".format(tag.name))
+            pass
+        except Exception, e:
+            log.error('Exception occurred while finding eu_themes tag names: %s', e)
+
+        return tag_names_list
 
     def get_agent(self, agent_string, default_values):
         agent_regex_config = default_values.get('agent_code_regex')
