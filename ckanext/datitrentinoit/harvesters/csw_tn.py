@@ -124,7 +124,7 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
             'group': 1 # optional, dependes by the regular expression
         },
         'dcatapit_skos_theme_id': 'theme.data-theme-skos',
-        'dcatapit_skos_places_id': 'theme.data-places-skos'
+        'dcatapit_skos_places_id': 'theme.places-skos'
     }
     
     def info(self):
@@ -201,11 +201,11 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         if iso_values["keywords"]:
             dataset_themes = self.get_controlled_vocabulary_values('eu_themes', default_values.get('dcatapit_skos_theme_id'), iso_values["keywords"])
 
-        if dataset_themes and len(dataset_themes) > 0:
+        if dataset_themes and len(dataset_themes) > 1:
         	dataset_themes = list(set(dataset_themes))
         	dataset_themes = '{' + ','.join(str(l) for l in dataset_themes) + '}'
         else:
-            dataset_themes =  default_values.get('dataset_theme')
+            dataset_themes = dataset_themes[0] if dataset_themes and len(dataset_themes) > 0 else default_values.get('dataset_theme')
 
         log.info("Medatata harvested dataset themes: %r", dataset_themes)
         package_dict['extras'].append({'key': 'theme', 'value': dataset_themes})
@@ -319,11 +319,11 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         if iso_values["keywords"]:
             dataset_places = self.get_controlled_vocabulary_values('places', default_values.get('dcatapit_skos_places_id'), iso_values["keywords"])
 
-        if dataset_places and len(dataset_places) > 0:
+        if dataset_places and len(dataset_places) > 1:
             dataset_places = list(set(dataset_places))
             dataset_places = '{' + ','.join(str(l) for l in dataset_places) + '}'
         else:
-            dataset_places =  default_values.get('dataset_place')
+            dataset_places = dataset_places[0] if dataset_places and len(dataset_places) > 0 else default_values.get('dataset_place')
 
         log.info("Medatata harvested dataset places: %r", dataset_places)
         package_dict['extras'].append({'key': 'geographical_name', 'value': dataset_places})
@@ -481,13 +481,14 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
         if len(tag_names_list) > 0:
             for key in keywords:
-                if thesaurus_id and thesaurus_id in key['thesaurus-identifier']:
+                if thesaurus_id and (thesaurus_id in key['thesaurus-identifier'] or thesaurus_id in key['thesaurus-title']):
                     for k in key['keyword']:
                         query = Session.query(TagMultilang).filter(TagMultilang.text==k, TagMultilang.tag_name.in_(tag_names_list))
                         query = query.autoflush(True)
                         theme = query.first()
 
-                        values.append(theme.tag_name)
+                        if theme and theme.tag_name:
+                            values.append(theme.tag_name)
         return values
 
     def get_vocabulary_tag_names(self, vocab_id_or_name):
