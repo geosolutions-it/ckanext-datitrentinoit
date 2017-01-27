@@ -57,6 +57,7 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
                 'element': 'input',
                 'type': 'date',
                 'label': _('Creation Date'),
+                'format': '%d-%m-%Y',
                 'placeholder': _('creation date'),
                 'is_required': False,
                 'localized': False
