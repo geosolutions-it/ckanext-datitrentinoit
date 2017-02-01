@@ -117,11 +117,11 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         'frequency': 'UNKNOWN',
         'agent_code_regex': {
             'regex': '\(([^)]+)\:([^)]+)\)',
-            'group': 2 # optional, dependes by the regular expression
+            'groups': [2] # optional, dependes by the regular expression
         },
         'org_name_regex': {
-            'regex': '-(.+)',
-            'group': 1 # optional, dependes by the regular expression
+            'regex': '([^(]*)(\(IPa[^)]*\))(.+)',
+            'groups': [1,3] # optional, dependes by the regular expression
         },
         'dcatapit_skos_theme_id': 'theme.data-theme-skos',
         'dcatapit_skos_places_id': 'theme.places-skos'
@@ -183,6 +183,17 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
                                 package_dict['owner_org'] =_dict.get('owner_org')
             else:
                 package_dict = _dict
+
+        #
+        # Increase the tag name max length limit to 100 as set at DB level (instead 50 as did by the ckanext-spatial)
+        #
+        tags = []
+        if 'tags' in iso_values:
+            for tag in iso_values['tags']:
+                tag = tag[:100] if len(tag) > 100 else tag
+                tags.append({'name': tag})
+
+            package_dict['tags'] = tags
         
         # ---------------------------------------------------
         # MANDATORY FOR DCAT-AP_IT
@@ -513,10 +524,14 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
         agent_code = re.search(agent_regex_config.get('regex', self._default_values.get('agent_code_regex').get('regex')), agent_string)
         if agent_code:
-            regex_group = agent_regex_config.get('group')
+            regex_groups = agent_regex_config.get('groups')
 
-            if regex_group:
-            	agent_code = agent_code.group(regex_group)
+            if regex_groups and isinstance(regex_groups, list) and len(regex_groups) > 0:
+                code = ''
+                for group in regex_groups:
+                    code += agent_code.group(group)
+
+                agent_code = code
 
             agent_code = agent_code.lower().strip()
 
@@ -524,10 +539,14 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
         organization_name = re.search(org_name_regex_config.get('regex', self._default_values.get('org_name_regex').get('regex')), agent_string)
         if organization_name:
-            regex_group = org_name_regex_config.get('group')
+            regex_groups = org_name_regex_config.get('groups')
 
-            if regex_group:
-                organization_name = organization_name.group(regex_group)
+            if regex_groups and isinstance(regex_groups, list) and len(regex_groups) > 0:
+                code = ''
+                for group in regex_groups:
+                    code += organization_name.group(group)
+
+                organization_name = code
 
     		organization_name = organization_name.lstrip()
 
