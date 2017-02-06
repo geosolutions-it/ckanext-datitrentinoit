@@ -269,6 +269,8 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         # rights_holder
         # ##################
         citedResponsiblePartys = iso_values["cited-responsible-party"]
+        self.localized_org = []
+        
         for party in citedResponsiblePartys:
         	if party["role"] == "owner":
         		rights_older_and_author = party["organisation-name"]
@@ -290,8 +292,6 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         		package_dict['extras'].append({'key': 'holder_name', 'value': organization_name or rights_older_and_author})
 
         		package_dict['author'] = organization_name or rights_older_and_author
-
-        		self.localized_org = []
 
         		self.localized_org.append({
         			'text': organization_name or rights_older_and_author,
