@@ -1,0 +1,47 @@
+[
+  {
+    "status": "active",
+    "maintainer": "",
+    "od_conformance": "approved",
+    "family": "",
+    "title": "Creative Commons CCZero 1.0",
+    "domain_data": true,
+    "osd_conformance": "",
+    "url": "http://creativecommons.org/publicdomain/zero/1.0/deed.it",
+    "domain_content": true,
+    "is_okd_compliant": true,
+    "is_osi_compliant": false,
+    "domain_software": true,
+    "id": "cc-zero"
+  },
+  {
+    "status": "active",
+    "maintainer": "",
+    "od_conformance": "approved",
+    "family": "",
+    "title": "Creative Commons Attribution 4.0",
+    "domain_data": false,
+    "osd_conformance": "",
+    "url": "http://creativecommons.org/licenses/by/4.0/deed.it",
+    "domain_content": true,
+    "is_okd_compliant": true,
+    "is_osi_compliant": false,
+    "domain_software": false,
+    "id": "cc-by"
+  },
+  {
+    "status": "active",
+    "maintainer": "",
+    "od_conformance": "approved",
+    "family": "",
+    "title": "Open Data Commons Open Database License (ODbL)",
+    "domain_data": true,
+    "osd_conformance": "",
+    "url": "http://www.opendefinition.org/licenses/odc-odbl",
+    "domain_content": false,
+    "is_okd_compliant": true,
+    "is_osi_compliant": false,
+    "domain_software": false,
+    "id": "odc-odbl"
+  }
+]
