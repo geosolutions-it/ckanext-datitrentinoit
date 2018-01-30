@@ -197,3 +197,8 @@ In order to update the existing translations proceed as follow:
 3. Once the translation files (po) have been updated adding the new translations needed, compile them by running:
 
      `python setup.py compile_catalog --locale YOUR_LANGUAGE`
+
+## Using custom licenses.
+
+Customized dataset license list is available in `files/licenses.json`. To use it, set `licenses_group_url` config 
+var to `https://github.com/geosolutions-it/ckanext-datitrentinoit/tree/master/files/licenses.json`.
