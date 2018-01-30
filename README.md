@@ -200,5 +200,5 @@ In order to update the existing translations proceed as follow:
 
 ## Using custom licenses.
 
-Customized dataset license list is available in `files/licenses.json`. To use it, set `licenses_group_url` config 
-var to `https://github.com/geosolutions-it/ckanext-datitrentinoit/tree/master/files/licenses.json`.
+Customized dataset license list is available in `ckanext/datitrentinoit/licenses/licenses.json`. To use it, set `licenses_group_url` config 
+var to `https://github.com/geosolutions-it/ckanext-datitrentinoit/tree/dcatapit/ckanext/datitrentinoit/licenses/licenses.json`.
