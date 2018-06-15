@@ -139,7 +139,8 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
         return {
             'dti_ga_site_id': self._get_ga_site_id,
             'dti_ga_site_domain': self._get_ga_site_domain,
-            'dti_recent_updates': helpers.recent_updates
+            'dti_recent_updates': helpers.recent_updates,
+            'hacked_current_url': helpers.hacked_current_url,
         }
 
     def _get_ga_site_id(self):

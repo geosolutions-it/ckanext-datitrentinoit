@@ -41,6 +41,7 @@
 	{# <li><a href="http://okfn.org/services">{{ _('Open Knowledge Foundation') }}</a></li> #}
         {# <li><a href="http://www.okfn.org/">{{ _('Open Knowledge Foundation') }}</a></li> #}
         {# <li><a href="http://www.opendefinition.org/okd/"><img src="http://assets.okfn.org/images/ok_buttons/od_80x15_blue.png"></a></li> #}
+
       </ul>
     </nav>
 
@@ -48,8 +49,17 @@
     <div class="attribution span4" style="text-align:center;">
       {# <p><a href="http://www.provincia.tn.it/"><img src="/images/logo_prov_tn.jpg" /></a></p> #}
       <p><a href="http://www.innovazione.provincia.tn.it/opendata"><img src="/images/logo_prov_tn.jpg" /></a></p>
+
       <hr>
-      <p style="line-height:32px;">{% trans %}<strong>Powered by</strong> <a class="hide-text ckan-footer-logo" href="http://ckan.org">CKAN</a>{% endtrans %}</p>
+      <p style="line-height:32px;">
+
+        {# compat with ckanext-provbz markup in footer.html to show reports link #}
+        <ul class="unstyled" style="display: inline-block">
+        {% block header_account_settings_link %}
+        {% endblock %}
+        </ul>
+        {% trans %}<strong>Powered by</strong> <a class="hide-text ckan-footer-logo" href="http://ckan.org">CKAN</a>{% endtrans %}
+      </p>
       {% snippet "snippets/language_selector.html" %}
     </div>
 
