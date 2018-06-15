@@ -51,14 +51,17 @@ def recent_updates(n):
 
     return search_results.get('results', [])
 
-# this is a hack against ckan-2.4.0 (until 2.4.7)
-# Early 2.4.x versions don't have helpers.current_url() and rely
+# this is a hack against ckan-2.4 (versions before 2.4.7) and ckan-2.5 before ckan-2.5.6
+# Early 2.4/2.5 versions don't have helpers.current_url() and rely
 # on unescaped CKAN_CURRENT_URL env var in request. This can cause 
 # invalid redirection url in language selector.
 # Details:
 #  * 2.4.0: https://github.com/ckan/ckan/blob/ckan-2.4.0/ckan/lib/helpers.py#L277-L280
 #  * 2.4.9: https://github.com/ckan/ckan/blob/ckan-2.4.9/ckan/lib/helpers.py#L305-L313
-# fix in https://github.com/ckan/ckan/commit/109d47c1fe852085eb9bf3ba8e34d6bc6e57e3b1
+#
+# fix in 
+#        2.4: https://github.com/ckan/ckan/commit/109d47c1fe852085eb9bf3ba8e34d6bc6e57e3b1
+#        2.5: https://github.com/ckan/ckan/commit/44a82d732e8be97ac2df03c11b2659ff1a4d6e30
 #
 # Relevant issues:
 # https://github.com/geosolutions-it/ckanext-provbz/issues/37
