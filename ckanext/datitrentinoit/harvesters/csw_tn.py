@@ -225,6 +225,11 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         else:
             dataset_themes = default_values.get('dataset_theme')
 
+        # backward compatibility with {THEME} notation
+        if isinstance(dataset_themes, (str, unicode,)):
+            dataset_themes = [{'theme': dt} for dt in dataset_themes.strip('{}').split(',')]
+
+
         log.info("Medatata harvested dataset themes: %r", dataset_themes)
         package_dict['extras'].append({'key': 'theme', 'value': json.dumps(dataset_themes)})
 
