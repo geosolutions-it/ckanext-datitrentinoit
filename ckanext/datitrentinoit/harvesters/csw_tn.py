@@ -402,7 +402,7 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         if conforms_to_title:
             conforms_to.update({'title': {conforms_to_locale: conforms_to_title}})
         if conforms_to_description:
-            conforms_to.update({'description': {conforms_to_locale: conforms_to_description}})
+            conforms_to.update({'description': {conforms_to_locale: conforms_to_description[0]['text']}})
 
         self.localized_confomity = []
 
@@ -410,7 +410,7 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
             if entry['text'] and entry['locale'].lower()[1:]:
                 conforms_to_locale = self._ckan_locales_mapping[entry['locale'].lower()[1:]]
                 if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
-                    conforms_to['description'][conforms_to_locale] = entity['text']
+                    conforms_to['description'][conforms_to_locale] = entry['text']
         
         if conforms_to:
             package_dict['extras'].append({'key': 'conforms_to', 'value': json.dumps([conforms_to])})
@@ -425,31 +425,18 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
                 creator_name = party["organisation-name"]
 
                 agent_code, organization_name = self.get_agent(creator_name, default_values)
-
-                package_dict['extras'].append({'key': 'creator_name', 'value': organization_name or creator_name})
-
-                if creator_name:
-                    package_dict['extras'].append({'key': 'creator_identifier', 'value': agent_code or default_agent_code})
-
-                self.localized_creator.append({
-                    'text':  organization_name or creator_name,
-                    'locale': self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
-                })
+                creator_lang = self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
+                
+                creator = {'creator_name': {creator_lang: organization_name or creator_name},
+                           'creator_identifier': agent_code or default_agent_code}
 
                 for entry in party["organisation-name-localized"]:
                     if entry['text'] and entry['locale'].lower()[1:]:
                         agent_code, organization_name = self.get_agent(entry['text'], default_values)
-
-                        if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
-                            self.localized_creator.append({
-                                'text': organization_name or entry['text'],
-                                'locale': self._ckan_locales_mapping[entry['locale'].lower()[1:]]
-                            })
-                        else:
-                            log.warning('Locale Mapping not found for dataset creator name, entry skipped!')
-                    else:
-                        log.warning('TextGroup data not available for dataset creator name, entry skipped!')
-
+                        creator_lang = self._ckan_locales_mapping[entry['locale'].lower()[1:]]
+                        if creator_lang:
+                            creator['creator_name'][creator_lang] = organization_name or entry['text']
+                package_dict['extras'].append({'key': 'creator', 'value': json.dumps([creator])})
         # ---------------------------------------------------
         # OTHER FOR PROV-BZ
         # ---------------------------------------------------
