@@ -400,22 +400,19 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
         # conforms_to
         # ##################
-        conforms_to_title = iso_values["conformity-specification-title"]
-        conforms_to_description = iso_values["conformity-title-text"]
+        conforms_to_identifier = iso_values["conformity-specification-title"]
         conforms_to_locale = self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
         conforms_to = {}
-        if conforms_to_title:
-            conforms_to.update({'title': {conforms_to_locale: conforms_to_title}})
-        if conforms_to_description:
-            conforms_to.update({'description': {conforms_to_locale: conforms_to_description[0]['text']}})
 
-        self.localized_confomity = []
+        if conforms_to_identifier:
+            conforms_to.update({'identifier': conforms_to_identifier})
+            conforms_to.update({'title': {conforms_to_locale: conforms_to_identifier}})
 
         for entry in iso_values["conformity-title-text"]:
             if entry['text'] and entry['locale'].lower()[1:]:
                 conforms_to_locale = self._ckan_locales_mapping[entry['locale'].lower()[1:]]
                 if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
-                    conforms_to['description'][conforms_to_locale] = entry['text']
+                    conforms_to['title'][conforms_to_locale] = entry['text']
         
         if conforms_to:
             package_dict['extras'].append({'key': 'conforms_to', 'value': json.dumps([conforms_to])})
@@ -580,11 +577,6 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
                     # persisting holder_name field
                     self.persist_package_multilang_field(package_id, 'holder_name', org.get('text'), org.get('locale'), 'extra')  
-
-            if self.localized_confomity and len(self.localized_confomity) > 0:
-                for conformity in self.localized_confomity:
-                    # persisting author field
-                    self.persist_package_multilang_field(package_id, 'conforms_to', conformity.get('text'), conformity.get('locale'), 'extra')
 
             if self.localized_creator and len(self.localized_creator) > 0:
                 for creator in self.localized_creator:
