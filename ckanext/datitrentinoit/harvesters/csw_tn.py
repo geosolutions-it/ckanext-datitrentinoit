@@ -420,7 +420,6 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         # creator
         # ###############
         citedResponsiblePartys = iso_values["cited-responsible-party"]
-        self.localized_creator = []
 
         for party in citedResponsiblePartys:
             if party["role"] == "author":
@@ -577,11 +576,6 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
                     # persisting holder_name field
                     self.persist_package_multilang_field(package_id, 'holder_name', org.get('text'), org.get('locale'), 'extra')  
-
-            if self.localized_creator and len(self.localized_creator) > 0:
-                for creator in self.localized_creator:
-                    # persisting author field
-                    self.persist_package_multilang_field(package_id, 'creator_name', creator.get('text'), creator.get('locale'), 'extra')
 
             if self.localized_publisher and len(self.localized_publisher) > 0:
                 for publisher in self.localized_publisher:
