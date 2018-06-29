@@ -28,6 +28,7 @@ from ckanext.spatial.model import ISOElement
 from ckanext.spatial.model import ISOKeyword
 
 from ckanext.multilang.harvesters.multilang import ISOTextGroup
+from ckanext.dcatapit.model import License
 
 log = logging.getLogger(__name__)
 
@@ -480,6 +481,30 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
             default_license = self.source_config.get('default_license')
             if default_license:
                 package_dict['license_id'] = default_license
+
+        #  -- license handling -- #
+        license_id = package_dict.get('license_id')
+        license_url = None
+        license = None
+        access_constraints = None
+        for ex in package_dict['extras']:
+            if ex['key'] == 'license_url':
+                license_url = ex['value']
+            elif ex['key'] == 'license':
+                license = ex['value']
+            elif ex['key'] == 'access_constraints':
+                access_constraints = ex['value']
+
+        if not (access_constraints or license_id or license or license_url):
+            l = License.get(License.DEFAULT_LICENSE)
+
+        else:
+            l, default = License.find_by_token(access_constraints, license, license_id, license_url)
+        
+        for res in package_dict['resources']:
+            res['license_type'] = l.uri
+
+
 
         # End of processing, return the modified package
         return package_dict
