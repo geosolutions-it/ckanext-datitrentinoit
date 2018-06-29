@@ -391,7 +391,7 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
                 if key == 'temporal-extent-begin':
                     temporal_start = temporal_extent_value
                 if key == 'temporal-extent-end':
-                    temporal_start = temporal_extent_value
+                    temporal_end = temporal_extent_value
         if temporal_start:
             temporal_coverage.append({'temporal_start': temporal_start,
                                       'temporal_end': temporal_end})
