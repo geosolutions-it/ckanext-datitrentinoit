@@ -22,6 +22,7 @@ from ckan.plugins.core import SingletonPlugin
 
 from ckanext.multilang.harvesters.multilang import MultilangHarvester
 from ckanext.geonetwork.harvesters.geonetwork import GeoNetworkHarvester
+from ckanext.dcatapit.harvesters.utils import get_controlled_vocabulary_values
 
 from ckanext.spatial.model import ISODocument
 from ckanext.spatial.model import ISOElement
@@ -510,43 +511,7 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         return package_dict
 
     def get_controlled_vocabulary_values(self, vocabulary_id, thesaurus_id, keywords):
-        log.debug('::::: Collecting thesaurus data for dcatapit skos {0} from the metadata keywords :::::'.format(vocabulary_id))
-
-        values = []
-
-        #
-        # Get all the places tag names by the vocabulary id
-        #
-        tag_names_list = self.get_vocabulary_tag_names(vocabulary_id)
-
-        if len(tag_names_list) > 0:
-            for key in keywords:
-                if thesaurus_id and (thesaurus_id in key['thesaurus-identifier'] or thesaurus_id in key['thesaurus-title']):
-                    for k in key['keyword']:
-                        query = Session.query(TagMultilang).filter(TagMultilang.text==k, TagMultilang.tag_name.in_(tag_names_list))
-                        query = query.autoflush(True)
-                        theme = query.first()
-
-                        if theme and theme.tag_name:
-                            values.append(theme.tag_name)
-        return values
-
-    def get_vocabulary_tag_names(self, vocab_id_or_name):
-        tag_names_list = []
-
-        try:
-            log.debug("Finding tag names by vocabulary id or name for vocabulary {0}".format(vocab_id_or_name))
-            tags = Tag.all(vocab_id_or_name)
-
-            if tags:
-                for tag in tags:
-                    tag_names_list.append(tag.name)
-                    log.debug("Tag name for tag {0} collected".format(tag.name))
-            pass
-        except Exception, e:
-            log.error('Exception occurred while finding eu_themes tag names: %s', e)
-
-        return tag_names_list
+        return get_controlled_vocabulary_values(vocabulary_id, thesaurus_id, keywords)
 
     def get_agent(self, agent_string, default_values):
         agent_regex_config = default_values.get('agent_code_regex')
