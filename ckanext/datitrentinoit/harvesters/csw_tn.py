@@ -511,6 +511,22 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         return package_dict
 
     def get_controlled_vocabulary_values(self, vocabulary_id, thesaurus_id, keywords):
+        log.debug('::::: Collecting thesaurus data for dcatapit skos {0} from the metadata keywords :::::'.format(vocabulary_id))
+
+        values = []
+
+        else:
+            l, default = License.find_by_token(access_constraints, license, license_id, license_url)
+        
+        for res in package_dict['resources']:
+            res['license_type'] = l.uri
+
+
+
+        # End of processing, return the modified package
+        return package_dict
+
+    def get_controlled_vocabulary_values(self, vocabulary_id, thesaurus_id, keywords):
         return get_controlled_vocabulary_values(vocabulary_id, thesaurus_id, keywords)
 
     def get_agent(self, agent_string, default_values):
