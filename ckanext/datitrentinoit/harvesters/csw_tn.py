@@ -7,12 +7,14 @@ import requests
 import StringIO
 import urllib
 import urlparse
+import json
 
 from lxml import etree
 
 from ckan import model
 from ckan.model import Session
 from ckan.model import Tag
+from ckan.common import c as C
 
 from ckanext.multilang.model import PackageMultilang, TagMultilang
 
@@ -26,6 +28,7 @@ from ckanext.spatial.model import ISOElement
 from ckanext.spatial.model import ISOKeyword
 
 from ckanext.multilang.harvesters.multilang import ISOTextGroup
+from ckanext.dcatapit.model import License
 
 log = logging.getLogger(__name__)
 
@@ -110,7 +113,7 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
     }
 
     _default_values = {
-        'dataset_theme': 'OP_DATPRO',
+        'dataset_theme': [{'theme': 'OP_DATPRO', 'subthemes': []}],
         'dataset_place': 'ITA_TRT',
         'dataset_language': '{ITA,DEU,ENG}',
         'agent_code': 'p_TN',
@@ -136,12 +139,16 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
     def get_package_dict(self, iso_values, harvest_object):        
         super_package_dicts = []
+
+        # temp fix for c.userobj which is not attached to current session
+        from ckan.model import User
+        C.userobj = Session.query(User).filter_by(name=C.user).one()
+
         for cls in CSWTNHarvester.__bases__:
             c = cls()
             
             if hasattr(c, 'source_config'):
                 c.source_config = self.source_config
-
             super_package_dicts.append(c.get_package_dict(iso_values, harvest_object))
 
             if hasattr(c, '_package_dict'):
@@ -212,14 +219,20 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         if iso_values["keywords"]:
             dataset_themes = self.get_controlled_vocabulary_values('eu_themes', default_values.get('dcatapit_skos_theme_id'), iso_values["keywords"])
 
-        if dataset_themes and len(dataset_themes) > 1:
-        	dataset_themes = list(set(dataset_themes))
-        	dataset_themes = '{' + ','.join(str(l) for l in dataset_themes) + '}'
+        if dataset_themes:
+            dataset_themes = list(set(dataset_themes))
+            dataset_themes = [{'theme': str(l), 'subthemes': []} for l in dataset_themes]
+
         else:
-            dataset_themes = dataset_themes[0] if dataset_themes and len(dataset_themes) > 0 else default_values.get('dataset_theme')
+            dataset_themes = default_values.get('dataset_theme')
+
+        # backward compatibility with {THEME} notation
+        if isinstance(dataset_themes, (str, unicode,)):
+            dataset_themes = [{'theme': dt} for dt in dataset_themes.strip('{}').split(',')]
+
 
         log.info("Medatata harvested dataset themes: %r", dataset_themes)
-        package_dict['extras'].append({'key': 'theme', 'value': dataset_themes})
+        package_dict['extras'].append({'key': 'theme', 'value': json.dumps(dataset_themes)})
 
         # publisher
         # ##################
@@ -227,34 +240,34 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         self.localized_publisher = []
 
         for party in citedResponsiblePartys:
-        	if party["role"] == "publisher":
-        		publisher_name = party["organisation-name"]
+            if party["role"] == "publisher":
+                publisher_name = party["organisation-name"]
 
-        		agent_code, organization_name = self.get_agent(publisher_name, default_values)
+                agent_code, organization_name = self.get_agent(publisher_name, default_values)
 
-        		package_dict['extras'].append({'key': 'publisher_name', 'value': organization_name or publisher_name})
+                package_dict['extras'].append({'key': 'publisher_name', 'value': organization_name or publisher_name})
 
-        		if publisher_name:
-        			package_dict['extras'].append({'key': 'publisher_identifier', 'value': agent_code or default_agent_code})
+                if publisher_name:
+                    package_dict['extras'].append({'key': 'publisher_identifier', 'value': agent_code or default_agent_code})
 
-        		self.localized_publisher.append({
-        			'text':  organization_name or publisher_name,
-        			'locale': self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
-        		})
+                self.localized_publisher.append({
+                    'text':  organization_name or publisher_name,
+                    'locale': self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
+                })
 
-        		for entry in party["organisation-name-localized"]:
-        			if entry['text'] and entry['locale'].lower()[1:]:
-        				agent_code, organization_name = self.get_agent(entry['text'], default_values)
+                for entry in party["organisation-name-localized"]:
+                    if entry['text'] and entry['locale'].lower()[1:]:
+                        agent_code, organization_name = self.get_agent(entry['text'], default_values)
 
-        				if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
-        					self.localized_publisher.append({
-        						'text': organization_name or entry['text'],
-        						'locale': self._ckan_locales_mapping[entry['locale'].lower()[1:]]
-        					})
-        				else:
-        					log.warning('Locale Mapping not found for dataset publisher name, entry skipped!')
-        			else:
-        				log.warning('TextGroup data not available for dataset publisher name, entry skipped!')
+                        if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
+                            self.localized_publisher.append({
+                                'text': organization_name or entry['text'],
+                                'locale': self._ckan_locales_mapping[entry['locale'].lower()[1:]]
+                            })
+                        else:
+                            log.warning('Locale Mapping not found for dataset publisher name, entry skipped!')
+                    else:
+                        log.warning('TextGroup data not available for dataset publisher name, entry skipped!')
 
         # modified
         # ##################
@@ -266,51 +279,54 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         updateFrequency = iso_values["frequency-of-update"]
         package_dict['extras'].append({'key': 'frequency', 'value': mapping_frequencies_to_mdr_vocabulary.get(updateFrequency, default_values.get('frequency'))})
 
+        # is_version_of is not available
+        ####################
+
         # rights_holder
         # ##################
         citedResponsiblePartys = iso_values["cited-responsible-party"]
         self.localized_org = []
         
         for party in citedResponsiblePartys:
-        	if party["role"] == "owner":
-        		rights_older_and_author = party["organisation-name"]
+            if party["role"] == "owner":
+                rights_older_and_author = party["organisation-name"]
 
-        		agent_code, organization_name = self.get_agent(rights_older_and_author, default_values)
+                agent_code, organization_name = self.get_agent(rights_older_and_author, default_values)
 
-        		if rights_older_and_author:
-        			package_dict['extras'].append({'key': 'holder_identifier', 'value': agent_code or default_agent_code})
+                if rights_older_and_author:
+                    package_dict['extras'].append({'key': 'holder_identifier', 'value': agent_code or default_agent_code})
 
-        		contact_info_online_resource = None
-        		if party["contact-info"] != '' and party["contact-info"]["online-resource"] and party["contact-info"]["online-resource"] != '':
-        			contact_info_online_resource = party["contact-info"]["online-resource"].get('url')
+                contact_info_online_resource = None
+                if party["contact-info"] != '' and party["contact-info"]["online-resource"] and party["contact-info"]["online-resource"] != '':
+                    contact_info_online_resource = party["contact-info"]["online-resource"].get('url')
 
-        			package_dict['extras'].append({'key': 'site_url', 'value': contact_info_online_resource})
-        			package_dict['url'] = contact_info_online_resource
+                    package_dict['extras'].append({'key': 'site_url', 'value': contact_info_online_resource})
+                    package_dict['url'] = contact_info_online_resource
 
-        			package_dict['extras'].append({'key': 'contact', 'value': party["contact-info"]["email"] or None})
+                    package_dict['extras'].append({'key': 'contact', 'value': party["contact-info"]["email"] or None})
 
-        		package_dict['extras'].append({'key': 'holder_name', 'value': organization_name or rights_older_and_author})
+                package_dict['extras'].append({'key': 'holder_name', 'value': organization_name or rights_older_and_author})
 
-        		package_dict['author'] = organization_name or rights_older_and_author
+                package_dict['author'] = organization_name or rights_older_and_author
 
-        		self.localized_org.append({
-        			'text': organization_name or rights_older_and_author,
-        			'locale': self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
-        		})
+                self.localized_org.append({
+                    'text': organization_name or rights_older_and_author,
+                    'locale': self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
+                })
 
-        		for entry in party["organisation-name-localized"]:
-        			if entry['text'] and entry['locale'].lower()[1:]:
-        				agent_code, organization_name = self.get_agent(entry['text'], default_values)
+                for entry in party["organisation-name-localized"]:
+                    if entry['text'] and entry['locale'].lower()[1:]:
+                        agent_code, organization_name = self.get_agent(entry['text'], default_values)
 
-        				if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
-        					self.localized_org.append({
-        						'text': organization_name or entry['text'],
-        						'locale': self._ckan_locales_mapping[entry['locale'].lower()[1:]]
-        					})
-        				else:
-        					log.warning('Locale Mapping not found for organization name, entry skipped!')
-        			else:
-        				log.warning('TextGroup data not available for organization name, entry skipped!')
+                        if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
+                            self.localized_org.append({
+                                'text': organization_name or entry['text'],
+                                'locale': self._ckan_locales_mapping[entry['locale'].lower()[1:]]
+                            })
+                        else:
+                            log.warning('Locale Mapping not found for organization name, entry skipped!')
+                    else:
+                        log.warning('TextGroup data not available for organization name, entry skipped!')
 
         # ---------------------------------------------------
         # OTHER NOT MANDATORY FOR DCAT_AP-IT
@@ -347,93 +363,82 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
         dataset_languages = iso_values["dataset-language"]
         language = None      
         if dataset_languages and len(dataset_languages) > 0:
-        	languages = []
-        	for language in dataset_languages:
-        		lang = mapping_languages_to_mdr_vocabulary.get(language, None)
-        		if lang:
-        			languages.append(lang)
+            languages = []
+            for language in dataset_languages:
+                lang = mapping_languages_to_mdr_vocabulary.get(language, None)
+                if lang:
+                    languages.append(lang)
 
-        	if len(languages) > 1:
-        		language = '{' + ','.join(str(l) for l in languages) + '}'
-        	else:
-        		language = languages[0] if len(languages) > 0 else default_values.get('dataset_language')
+            if len(languages) > 1:
+                language = '{' + ','.join(str(l) for l in languages) + '}'
+            else:
+                language = languages[0] if len(languages) > 0 else default_values.get('dataset_language')
 
-        	log.info("Medatata harvested dataset languages: %r", language)
+            log.info("Medatata harvested dataset languages: %r", language)
         else:
-        	language = default_values.get('dataset_language')
+            language = default_values.get('dataset_language')
 
         package_dict['extras'].append({'key': 'language', 'value': language})
 
         # temporal_coverage
         # ##################
-        for key in ['temporal-extent-begin', 'temporal-extent-end']:
-        	if len(iso_values[key]) > 0:
-        		temporal_extent_value = iso_values[key][0]
-        		if key == 'temporal-extent-begin':
-        			package_dict['extras'].append({'key': 'temporal_start', 'value': temporal_extent_value})
+        temporal_coverage = []
+        temporal_start = None
+        temporal_end = None
 
-        		if key == 'temporal-extent-end':
-        			package_dict['extras'].append({'key': 'temporal_end', 'value': temporal_extent_value})
+        for key in ['temporal-extent-begin', 'temporal-extent-end']:
+            if len(iso_values[key]) > 0:
+                temporal_extent_value = iso_values[key][0]
+                if key == 'temporal-extent-begin':
+                    temporal_start = temporal_extent_value
+                if key == 'temporal-extent-end':
+                    temporal_end = temporal_extent_value
+        if temporal_start:
+            temporal_coverage.append({'temporal_start': temporal_start,
+                                      'temporal_end': temporal_end})
+        if temporal_coverage:
+            package_dict['extras'].append({'key': 'temporal_coverage', 'value': json.dumps(temporal_coverage)})
 
         # conforms_to
         # ##################
-        conforms_to = iso_values["conformity-specification-title"]
-        package_dict['extras'].append({'key': 'conforms_to', 'value': conforms_to})
+        conforms_to_identifier = iso_values["conformity-specification-title"]
+        conforms_to_locale = self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
+        conforms_to = {}
 
-        self.localized_confomity = []
-
-        self.localized_confomity.append({
-        	'text': conforms_to,
-        	'locale': self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
-        })
+        if conforms_to_identifier:
+            conforms_to.update({'identifier': conforms_to_identifier})
+            conforms_to.update({'title': {conforms_to_locale: conforms_to_identifier}})
 
         for entry in iso_values["conformity-title-text"]:
-        	if entry['text'] and entry['locale'].lower()[1:]:
-        		if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
-        			self.localized_confomity.append({
-        				'text': entry['text'],
-        				'locale': self._ckan_locales_mapping[entry['locale'].lower()[1:]]
-        			})
-        		else:
-        			log.warning('Locale Mapping not found for the conformity title, entry skipped!')
-        	else:
-        		log.warning('TextGroup data not available for the conformity title, entry skipped!')
+            if entry['text'] and entry['locale'].lower()[1:]:
+                conforms_to_locale = self._ckan_locales_mapping[entry['locale'].lower()[1:]]
+                if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
+                    conforms_to['title'][conforms_to_locale] = entry['text']
+        
+        if conforms_to:
+            package_dict['extras'].append({'key': 'conforms_to', 'value': json.dumps([conforms_to])})
 
         # creator
         # ###############
         citedResponsiblePartys = iso_values["cited-responsible-party"]
-        self.localized_creator = []
 
         for party in citedResponsiblePartys:
-        	if party["role"] == "author":
-        		creator_name = party["organisation-name"]
+            if party["role"] == "author":
+                creator_name = party["organisation-name"]
 
-        		agent_code, organization_name = self.get_agent(creator_name, default_values)
+                agent_code, organization_name = self.get_agent(creator_name, default_values)
+                creator_lang = self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
+                
+                creator = {'creator_name': {creator_lang: organization_name or creator_name},
+                           'creator_identifier': agent_code or default_agent_code}
 
-        		package_dict['extras'].append({'key': 'creator_name', 'value': organization_name or creator_name})
-
-        		if creator_name:
-        			package_dict['extras'].append({'key': 'creator_identifier', 'value': agent_code or default_agent_code})
-
-        		self.localized_creator.append({
-        			'text':  organization_name or creator_name,
-        			'locale': self._ckan_locales_mapping.get(iso_values["metadata-language"], 'it').lower()
-        		})
-
-        		for entry in party["organisation-name-localized"]:
-        			if entry['text'] and entry['locale'].lower()[1:]:
-        				agent_code, organization_name = self.get_agent(entry['text'], default_values)
-
-        				if self._ckan_locales_mapping[entry['locale'].lower()[1:]]:
-        					self.localized_creator.append({
-        						'text': organization_name or entry['text'],
-        						'locale': self._ckan_locales_mapping[entry['locale'].lower()[1:]]
-        					})
-        				else:
-        					log.warning('Locale Mapping not found for dataset creator name, entry skipped!')
-        			else:
-        				log.warning('TextGroup data not available for dataset creator name, entry skipped!')
-
+                for entry in party["organisation-name-localized"]:
+                    if entry['text'] and entry['locale'].lower()[1:]:
+                        agent_code, organization_name = self.get_agent(entry['text'], default_values)
+                        creator_lang = self._ckan_locales_mapping[entry['locale'].lower()[1:]]
+                        if creator_lang:
+                            creator['creator_name'][creator_lang] = organization_name or entry['text']
+                package_dict['extras'].append({'key': 'creator', 'value': json.dumps([creator])})
         # ---------------------------------------------------
         # OTHER FOR PROV-BZ
         # ---------------------------------------------------
@@ -445,9 +450,9 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
         codes = []
         for char_set in iso_values["character-set"]:
-        	code = char_set["code"]
-        	if code:
-        		codes.append(code)
+            code = char_set["code"]
+            if code:
+                codes.append(code)
 
         # character_set
         # ##################
@@ -476,6 +481,30 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
             default_license = self.source_config.get('default_license')
             if default_license:
                 package_dict['license_id'] = default_license
+
+        #  -- license handling -- #
+        license_id = package_dict.get('license_id')
+        license_url = None
+        license = None
+        access_constraints = None
+        for ex in package_dict['extras']:
+            if ex['key'] == 'license_url':
+                license_url = ex['value']
+            elif ex['key'] == 'license':
+                license = ex['value']
+            elif ex['key'] == 'access_constraints':
+                access_constraints = ex['value']
+
+        if not (access_constraints or license_id or license or license_url):
+            l = License.get(License.DEFAULT_LICENSE)
+
+        else:
+            l, default = License.find_by_token(access_constraints, license, license_id, license_url)
+        
+        for res in package_dict['resources']:
+            res['license_type'] = l.uri
+
+
 
         # End of processing, return the modified package
         return package_dict
@@ -548,9 +577,9 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
 
                 organization_name = code
 
-    		organization_name = organization_name.lstrip()
+            organization_name = organization_name.lstrip()
 
-    	return [agent_code, organization_name]
+        return [agent_code, organization_name]
 
     def after_import_stage(self, package_dict):
         for cls in CSWTNHarvester.__bases__:
@@ -566,43 +595,33 @@ class CSWTNHarvester(GeoNetworkHarvester, MultilangHarvester):
             ## -------------------------------
 
             if self.localized_org and len(self.localized_org) > 0:
-            	for org in self.localized_org:
-            		# persisting author field
-            		self.persist_package_multilang_field(package_id, 'author', org.get('text'), org.get('locale'), 'package')
+                for org in self.localized_org:
+                    # persisting author field
+                    self.persist_package_multilang_field(package_id, 'author', org.get('text'), org.get('locale'), 'package')
 
-            		# persisting holder_name field
-            		self.persist_package_multilang_field(package_id, 'holder_name', org.get('text'), org.get('locale'), 'extra')  
-
-            if self.localized_confomity and len(self.localized_confomity) > 0:
-            	for conformity in self.localized_confomity:
-            		# persisting author field
-            		self.persist_package_multilang_field(package_id, 'conforms_to', conformity.get('text'), conformity.get('locale'), 'extra')
-
-            if self.localized_creator and len(self.localized_creator) > 0:
-            	for creator in self.localized_creator:
-            		# persisting author field
-            		self.persist_package_multilang_field(package_id, 'creator_name', creator.get('text'), creator.get('locale'), 'extra')
+                    # persisting holder_name field
+                    self.persist_package_multilang_field(package_id, 'holder_name', org.get('text'), org.get('locale'), 'extra')  
 
             if self.localized_publisher and len(self.localized_publisher) > 0:
-            	for publisher in self.localized_publisher:
-            		# persisting author field
-            		self.persist_package_multilang_field(package_id, 'publisher_name', publisher.get('text'), publisher.get('locale'), 'extra') 
+                for publisher in self.localized_publisher:
+                    # persisting author field
+                    self.persist_package_multilang_field(package_id, 'publisher_name', publisher.get('text'), publisher.get('locale'), 'extra') 
             pass
         except Exception, e:
             log.error('Exception occurred while persisting DB objects: %s', e)
             raise
 
     def persist_package_multilang_field(self, package_id, field_name, text, locale, field_type):
-	    record = PackageMultilang.get(package_id, field_name, locale, field_type)
-	    if record:
-	        log.info('::::::::: Updating the localized {0} package field in the package_multilang table :::::::::'.format(field_name))
-	        record.text = text
-	        record.save()
-	        log.info('::::::::: PACKAGE MULTILANG FIELD UPDATED SUCCESSFULLY :::::::::') 
-	    else:
-	        log.info('::::::::: Adding new localized {0} package field in the package_multilang table :::::::::'.format(field_name))
-	        PackageMultilang.persist({'id': package_id, 'text': text, 'field': field_name}, locale, field_type)
-	        log.info('::::::::: PACKAGE MULTILANG FIELD PERSISTED SUCCESSFULLY :::::::::')
+        record = PackageMultilang.get(package_id, field_name, locale, field_type)
+        if record:
+            log.info('::::::::: Updating the localized {0} package field in the package_multilang table :::::::::'.format(field_name))
+            record.text = text
+            record.save()
+            log.info('::::::::: PACKAGE MULTILANG FIELD UPDATED SUCCESSFULLY :::::::::') 
+        else:
+            log.info('::::::::: Adding new localized {0} package field in the package_multilang table :::::::::'.format(field_name))
+            PackageMultilang.persist({'id': package_id, 'text': text, 'field': field_name}, locale, field_type)
+            log.info('::::::::: PACKAGE MULTILANG FIELD PERSISTED SUCCESSFULLY :::::::::')
 
     def fetch_stage(self,harvest_object):
         """
