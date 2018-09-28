@@ -39,44 +39,44 @@ tags_subs = {
 # "gestione-del-territorio", "mobilita", "politica", "salute",
 # "sanita", "sicurezza", "sport", "test-categoria", "turismo", "welfare"]
 
-DEFAULT_GROUP_PRO = 'conoscenza'
+DEFAULT_GROUP_PRO = 'popolazionesocieta'
 
 # mappa Settore verso Categorie
 cat_map_pro = {
-    u'agricoltura':     'economia',
-    u'pesca':           'economia',
-    u'silvicoltura':    'economia',
+    u'agricoltura':     'agricoltura', 
+    u'pesca':           'agricoltura',
+    u'silvicoltura':    'agricoltura',
     u'commercio con l\'estero':     'economia',
     u'commercio con l\'estero e internazionalizzazione': 'economia',
     u'internazionalizzazione':      'economia',
     u'conti economici':             'economia',
     u'pubblica amministrazione': 'amministrazione',
-    u'istruzione formazione':    'conoscenza',
-    u'istruzione e formazione':  'conoscenza',
-    u'ricerca':                  'conoscenza',
-    u'sviluppo e innovazione':   'conoscenza',
-    u'mercato del lavoro':               'welfare',
-    u'salute':                           'welfare',
-    u'famiglie e comportamenti sociali': 'welfare',
-    u'assistenza e protezione sociale':  'welfare',
-    u'popolazione':                      'demografia',
-    u'società dell\'informazione':       'demografia',
+    u'istruzione formazione':    'cultura',
+    u'istruzione e formazione':  'cultura',
+    u'ricerca':                  'cultura',
+    u'sviluppo e innovazione':   'scienza-tecnologia',
+    u'mercato del lavoro':               'popolazionesocieta',
+    u'salute':                           'wellbeing',
+    u'famiglie e comportamenti sociali': 'wellbeing',
+    u'assistenza e protezione sociale':  'wellbeing',
+    u'popolazione':                      'popolazionesocieta',
+    u'società dell\'informazione':       'popolazionesocieta',
 }
 
-DEFAULT_GROUP_SUBPRO = 'conoscenza'
+DEFAULT_GROUP_SUBPRO = 'popolazionesocieta'
 
 cat_map_sub = {
-    "l'ambiente e il territorio":   "gestione-del-territorio",
-    'le infrastrutture':            "gestione-del-territorio",
-    'popolazione':                  "demografia",
-    'famiglie e comportamenti sociali': 'demografia',
-    'istruzione e formazione':      'conoscenza',
+    "l'ambiente e il territorio":   "regionicitta",
+    'le infrastrutture':            "regionicitta",
+    'popolazione':                  "popolazionesocieta",
+    'famiglie e comportamenti sociali': 'popolazionesocieta',
+    'istruzione e formazione':      'cultura',
     'mercato del lavoro':           'economia',
     'le imprese, la formazione e la valorizzazione del capitale produttivo':
                                     'economia',
     'agricoltura':                  'economia',
     'servizi':                      'economia',
-    'agricoltura, silvicoltura, pesca': 'economia',
+    'agricoltura, silvicoltura, pesca': 'agricoltura',
 }
 
 tipoindicatore_map = {
