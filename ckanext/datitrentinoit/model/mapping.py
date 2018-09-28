@@ -4,6 +4,8 @@ import json
 import logging
 import datetime
 
+import uuid
+
 from hashlib import sha1
 
 from ckanext.datitrentinoit.model.statweb_metadata import StatWebMetadataPro, StatWebMetadataSubPro
@@ -129,10 +131,14 @@ def create_base_dict(guid, metadata, config):
 
     extras = {
         'holder_name': 'Provincia Autonoma di Trento',
+        'holder_ientifier': 'p_TN',
+        'identifier': str(uuid.uuid4()),
+        'theme': '[{"subthemes": [], "theme": "OP_DATPRO"}]',
         'geographical_name': 'ITA_TRT',
         'geographical_geonames_url': 'http://www.geonames.org/3165243',
         'temporal_start': dateformat(created),
-        'frequency': metadata.get_frequenza(),
+        ##'frequency': metadata.get_frequenza() or 'UNKNOWN',
+        'frequency': 'UNKNOWN',
         'issued': now,
         'modified': dateformat(updated),
         'encoding': 'UTF-8',
