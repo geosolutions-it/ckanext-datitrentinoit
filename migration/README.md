@@ -1,5 +1,5 @@
 
-##PREPARING THE SYSTEM FOR DCAT_AP-IT
+## PREPARING THE SYSTEM FOR DCAT_AP-IT
 
 ### OUTDATED DOCUMENTATION (this was used to install the first version on ckanext-dcatapit [1.0.0])
 
