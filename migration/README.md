@@ -1,7 +1,9 @@
 
 ##PREPARING THE SYSTEM FOR DCAT_AP-IT
 
-This ckanext-datitrentinoit has been updated to integrate the old version of this extension with ckanext-dcatapit:
+### OUTDATED DOCUMENTATION (this was used to install the first version on ckanext-dcatapit [1.0.0])
+
+This ckanext-datitrentinoit has been updated to integrate the old version of this extension with ckanext-dcatapit 1.0.0:
 
 	Follow the steps below only the first time you prepare the system for installing the ckanext-dcatapit.
 
