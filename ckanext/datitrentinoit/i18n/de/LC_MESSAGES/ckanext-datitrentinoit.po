@@ -494,3 +494,24 @@ msgstr ""
 #: ckanext/datitrentinoit/templates/user/new_user_form.html:33
 msgid "Create Account"
 msgstr "Benutzerkonto anlegen"
+
+msgid "Creation Date"
+msgstr "Erstellungsdatum"
+
+msgid "Encoding"
+msgstr "Codierung"
+
+msgid "Site URL"
+msgstr "Seiten-URL"
+
+msgid "Contact"
+msgstr "Kontakt"
+
+msgid "Fields Description"
+msgstr "Felder Beschreibung"
+
+msgid "All languages"
+msgstr "Alle Sprachen"
+
+msgid "Localized Tag Name"
+msgstr "Lokalisierte Name Tag"

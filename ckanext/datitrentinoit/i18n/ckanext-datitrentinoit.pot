@@ -470,3 +470,23 @@ msgstr ""
 msgid "Create Account"
 msgstr ""
 
+msgid "Creation Date"
+msgstr ""
+
+msgid "Encoding"
+msgstr ""
+
+msgid "Site URL"
+msgstr ""
+
+msgid "Contact"
+msgstr ""
+
+msgid "Fields Description"
+msgstr ""
+
+msgid "All languages"
+msgstr ""
+
+msgid "Localized Tag Name"
+msgstr ""
