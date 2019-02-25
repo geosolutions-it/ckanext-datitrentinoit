@@ -52,34 +52,6 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
     def get_custom_schema(self):
         return [
             {
-                'name': 'creation_date',
-                'validator': ['ignore_missing'],
-                'element': 'input',
-                'type': 'date',
-                'label': _('Creation Date'),
-                'format': '%d-%m-%Y',
-                'placeholder': _('creation date'),
-                'is_required': False,
-                'localized': False
-            },  {
-                'name': 'encoding',
-                'validator': ['ignore_missing'],
-                'element': 'input',
-                'type': 'text',
-                'label': _('Encoding'),
-                'placeholder': _('encoding type'),
-                'is_required': False,
-                'localized': False
-            }, {
-                'name': 'site_url',
-                'validator': ['ignore_missing'],
-                'element': 'input',
-                'type': 'url',
-                'label': _('Site URL'),
-                'placeholder': _('site url'),
-                'is_required': False,
-                'localized': False
-            }, {
                 'name': 'contact',
                 'validator': ['ignore_missing'],
                 'element': 'input',
