@@ -51,7 +51,6 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
 
     def get_custom_schema(self):
         return [
-            {
               {
                 'name': 'fields_description',
                 'validator': ['ignore_missing'],
