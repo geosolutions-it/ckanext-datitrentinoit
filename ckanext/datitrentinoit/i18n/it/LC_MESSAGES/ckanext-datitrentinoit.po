@@ -302,17 +302,17 @@ msgstr " Informazioni Addizionali"
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:18
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:23
 msgid "Author"
-msgstr "Autore"
+msgstr "Contatto"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:30
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:35
 msgid "Origin"
-msgstr "Origine"
+msgstr "Sito di riferimento"
 
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:42
 #: ckanext/datitrentinoit/templates/package/snippets/additional_info.html:47
 msgid "Contact"
-msgstr "Contatto"
+msgstr "Altro Contatto"
 
 #: ckanext/datitrentinoit/templates/related/dashboard.html:6
 #: ckanext/datitrentinoit/templates/related/dashboard.html:9
@@ -505,13 +505,13 @@ msgid "Site URL"
 msgstr "URL del sito"
 
 msgid "Contact"
-msgstr "Contatto"
+msgstr "Altro Contatto"
 
 msgid "Fields Description"
-msgstr "Descizione dei campi"
+msgstr "Descrizione dei campi"
 
 msgid "All languages"
 msgstr "Tutte le lingua"
 
 msgid "Localized Tag Name"
-msgstr "Nome Tag Localizzato"
+msgstr "Nome Tag Visualizzato"
