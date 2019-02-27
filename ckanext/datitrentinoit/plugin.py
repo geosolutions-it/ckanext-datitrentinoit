@@ -51,17 +51,7 @@ class DatiTrentinoPlugin(plugins.SingletonPlugin, DefaultTranslation):
 
     def get_custom_schema(self):
         return [
-            {
-                'name': 'contact',
-                'validator': ['ignore_missing'],
-                'element': 'input',
-                'type': 'email',
-                'label': _('Contact'),
-                'placeholder': _('contact'),
-                'is_required': False,
-                'localized': False,
-                'ignore_from_info': True
-            }, {
+              {
                 'name': 'fields_description',
                 'validator': ['ignore_missing'],
                 'element': 'textarea',
