@@ -508,7 +508,7 @@ msgid "Contact"
 msgstr "Contatto"
 
 msgid "Fields Description"
-msgstr "Descizione dei campi"
+msgstr "Descrizione dei campi"
 
 msgid "All languages"
 msgstr "Tutte le lingua"
