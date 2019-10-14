@@ -37,18 +37,6 @@
           </tr>
         {% endif %}
 
-        {% if pkg_dict.contact %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _('Contact') }}</th>
-            <td class="dataset-details">{{ h.mail_to(email_address=contact or pkg_dict.contact, name=contact or pkg_dict.contact) }}</td>
-          </tr>
-        {% else %}
-          <tr>
-            <th scope="row" class="dataset-label">{{ _('Contact') }}</th>
-            <td class="dataset-details">{{ _('N/D') }}</td>
-          </tr>
-        {% endif %}
-
       {% endblock %}
     </tbody>
   </table>
