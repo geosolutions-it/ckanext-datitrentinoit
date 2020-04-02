@@ -490,3 +490,21 @@ msgstr ""
 
 msgid "Localized Tag Name"
 msgstr ""
+
+### STRINGHE LOCALIZZAZIONE PLUGIN SHIBBOLETH
+
+msgid "Shibboleth"
+msgstr "SPID"
+
+#: ckanext/shibboleth/templates/user/snippets/login_form.html:26
+msgid "Login through Shibboleth."
+msgstr "Accedi attraverso SPID"
+
+#: ckanext/shibboleth/templates/user/snippets/login_form.html:33
+msgid "Login via Shibboleth"
+msgstr "Accedi attraverso SPID"
+
+#: ckanext/shibboleth/templates/user/snippets/login_form.html:45
+msgid "Authentication by using local account"
+msgstr "Autenticazione con account amministratore"
+
